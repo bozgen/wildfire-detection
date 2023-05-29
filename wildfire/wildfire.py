@@ -1,7 +1,6 @@
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
-from keras.metrics import Precision, Recall, BinaryAccuracy
+from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -19,13 +18,13 @@ class Model:
 		# scale down the data to increase performance
 		self.data = self.data.map(lambda x, y: (x/255, y))
 		self._model = None
-		self.train_size = int(len(self.data)* .7)
-		self.val_size = int(len(self.data)  * .2)
-		self.test_size = int(len(self.data) * .1)
+		train_size = int(len(self.data)* .7)
+		val_size = int(len(self.data)  * .2)
+		test_size = int(len(self.data) * .1)
 
-		self.train = self.data.take(self.train_size)
-		self.val = self.data.skip(self.train_size).take(self.val_size)
-		self.test = self.data.skip(self.train_size+self.val_size).take(self.test_size)
+		self.train = self.data.take(train_size)
+		self.val = self.data.skip(train_size).take(val_size)
+		self.test = self.data.skip(train_size+val_size).take(test_size)
 
 	@property
 	def model(self):
