@@ -22,9 +22,9 @@ class Model:
 		val_size = int(len(self.data)  * .2)
 		test_size = int(len(self.data) * .1)
 
-		self.train = self.data.take(train_size)
-		self.val = self.data.skip(train_size).take(val_size)
-		self.test = self.data.skip(train_size+val_size).take(test_size)
+		self.train_data = self.data.take(train_size)
+		self.val_data = self.data.skip(train_size).take(val_size)
+		self.test_data = self.data.skip(train_size+val_size).take(test_size)
 
 	@property
 	def model(self):
@@ -69,14 +69,14 @@ class Model:
 
 	def train(self, epochs=15):
 		tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
-		hist = self.model.fit(self.train, epochs=epochs, validation_data=self.val, callbacks=[tensorboard_callback])
+		hist = self.model.fit(self.train_data, epochs=epochs, validation_data=self.val_data, callbacks=[tensorboard_callback])
 		self.model.save_weights(os.path.join(weights_dir, 'last_weights'))
 		self.evaluate()
 		self.load_weights()
 		return hist
 	
 	def evaluate(self):
-		loss, acc = self._model.evaluate(self.test, verbose=2)
+		loss, acc = self._model.evaluate(self.test_data, verbose=2)
 		print("Evaluated model,  accuracy: {:5.2f}%".format(100 * acc))
 		print("Evaluated model,  loss: {:5.2f}%".format(100 * loss))
 
