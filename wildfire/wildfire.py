@@ -85,7 +85,7 @@ class Model:
 	def load_weights(self):
 		self.model.load_weights(os.path.join(weights_dir, 'last_weights')).expect_partial()
 
-	def test_and_show_results(self, test_data_count=20):
+	def test_and_show_results(self):
 		labels= []
 		images=[]
 
@@ -107,7 +107,7 @@ class Model:
 
 		# show results
 		batch = [images, labels]
-		fig, ax = plt.subplots(ncols=test_data_count, figsize=(8,8))
+		fig, ax = plt.subplots(ncols=len(os.listdir(test_dir)), figsize=(8,8))
 		for idx, img in enumerate(batch[0][:]):
 			ax[idx].imshow(img.astype(int))
 			ax[idx].title.set_text("no fire" if batch[1][idx] else "WILDFIRE")
