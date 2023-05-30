@@ -1,4 +1,8 @@
+__pycache__/
+*.py[cod]
+
 data
 logs
 test_images
 venv
+predata

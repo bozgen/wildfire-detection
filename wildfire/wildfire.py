@@ -1,6 +1,6 @@
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
+from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Dense, Flatten
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -54,9 +54,10 @@ class Model:
 		model.add(Conv2D(16, (3,3), 1, activation="relu"))
 		model.add(MaxPooling2D())
 
+		model.add(Conv2D(32, (2,2), 1, activation="sigmoid"))
+
 		model.add(Flatten())
 		
-		model.add(Dense(1024, activation="relu"))
 		model.add(Dense(256, activation="relu"))
 		model.add(Dense(1, activation="sigmoid"))
 
@@ -106,9 +107,9 @@ class Model:
 
 		# show results
 		batch = [images, labels]
-		fig, ax = plt.subplots(ncols=len(os.listdir(test_dir)), figsize=(8,8))
-		for idx, img in enumerate(batch[0][:]):
+		fig, ax = plt.subplots(ncols=10, figsize=(8,8))
+		for idx, img in enumerate(batch[0][10:20]):
 			ax[idx].imshow(img.astype(int))
-			ax[idx].title.set_text("no fire" if batch[1][idx] else "WILDFIRE")
+			ax[idx].title.set_text("no fire" if batch[1][idx+10] else "WILDFIRE")
 			
 		plt.show()
