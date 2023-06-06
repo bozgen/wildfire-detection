@@ -89,19 +89,12 @@ class Model:
 
 		# test
 		for idx, test_image in enumerate(os.listdir(test_dir)):
-			img = cv2.imread(os.path.join(test_dir, f'fire_test_{idx+1}.jpg'))
-			img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-			resize = tf.image.resize(img, (256,256))
-			yhat = self.model.predict(np.expand_dims(resize/255.0, 0))
+			is_fire, img = self.predict_single(os.path.join(test_dir, f'fire_test_{idx+1}.jpg'))
 			images.append(img)
-
-			print(f"Image {idx+1}:", yhat)
-			if yhat > 0.5:
-				print(f"No fire")
-				labels.append(1)
-			else:
-				print(f"WILDIRE DETECTED")
+			if is_fire:
 				labels.append(0)
+			else:
+				labels.append(1)
 
 		# show results
 		batch = [images, labels]
@@ -110,4 +103,22 @@ class Model:
 			ax[idx].imshow(img.astype(int))
 			ax[idx].title.set_text("no fire" if batch[1][idx] else "WILDFIRE")
 			
+		plt.show()
+
+	def predict_single(self, image_path):
+		img = cv2.imread(image_path)
+		img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+		resize = tf.image.resize(img, (256,256))
+		yhat = self.model.predict(np.expand_dims(resize/255.0, 0))
+		if yhat > 0.5:
+			print("No fire")
+			return False, img
+		print("WILDFIRE DETECTED")
+		return True, img
+
+	def display_single(self, image_path):
+		is_fire, image = self.predict_single(image_path)
+		fig, ax = plt.subplots(ncols=1, figsize=(10,10))
+		ax.imshow(image.astype(int))
+		ax.title.set_text("WILDFIRE" if is_fire else "No fire")
 		plt.show()
