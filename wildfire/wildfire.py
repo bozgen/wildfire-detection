@@ -1,6 +1,6 @@
 import tensorflow as tf
 from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D, Dense, Flatten
+from keras.layers import Conv2D, MaxPooling2D, Dense, Flatten
 import cv2
 import numpy as np
 from matplotlib import pyplot as plt
@@ -54,8 +54,6 @@ class Model:
 		model.add(Conv2D(16, (3,3), 1, activation="relu"))
 		model.add(MaxPooling2D())
 
-		model.add(Conv2D(32, (2,2), 1, activation="sigmoid"))
-
 		model.add(Flatten())
 		
 		model.add(Dense(256, activation="relu"))
@@ -68,7 +66,7 @@ class Model:
 		return model
 	
 
-	def train(self, epochs=15):
+	def train(self, epochs=10):
 		tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 		hist = self.model.fit(self.train_data, epochs=epochs, validation_data=self.val_data, callbacks=[tensorboard_callback])
 		self.model.save_weights(os.path.join(weights_dir, 'last_weights'))
@@ -85,7 +83,7 @@ class Model:
 	def load_weights(self):
 		self.model.load_weights(os.path.join(weights_dir, 'last_weights')).expect_partial()
 
-	def test_and_show_results(self):
+	def test_and_show_first_ten(self):
 		labels= []
 		images=[]
 
@@ -107,9 +105,9 @@ class Model:
 
 		# show results
 		batch = [images, labels]
-		fig, ax = plt.subplots(ncols=10, figsize=(8,8))
-		for idx, img in enumerate(batch[0][10:20]):
+		fig, ax = plt.subplots(ncols=10, figsize=(10,10))
+		for idx, img in enumerate(batch[0][0:10]):
 			ax[idx].imshow(img.astype(int))
-			ax[idx].title.set_text("no fire" if batch[1][idx+10] else "WILDFIRE")
+			ax[idx].title.set_text("no fire" if batch[1][idx] else "WILDFIRE")
 			
 		plt.show()
