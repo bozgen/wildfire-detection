@@ -2,6 +2,11 @@
 
 ## Get started
 
+in your virtual environment
+```
+python -m pip install -r requirements.txt
+```
+
 
 ### Prediction / Training
 Use **main.py** file in the project root folder to run the project.
