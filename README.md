@@ -6,15 +6,15 @@ in your virtual environment
 ```
 python -m pip install -r requirements.txt
 ```
+---
 
-
-### Prediction / Training
+## Prediction / Training
 Use **main.py** file in the project root folder to run the project.
 The model class uses **data** folder to train the model and **test_images** folder to test the images.
 
+---
 
-
-### Preprocessing
+## Preprocessing
 
 Currently there is no pipeline where you can preprocess the images and add them to the dataset automatically. So it is done manually.
 
