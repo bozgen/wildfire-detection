@@ -52,9 +52,3 @@ def contrast():
 
 		# Stacking the original image with the enhanced image
 		cv2.imwrite(os.path.join(datadir, f'enhanced{idx}.jpg'), enhanced_img)
-
-def main():
-	contrast()
-	
-
-main()
