@@ -2,9 +2,12 @@
 
 ## Get started
 
-in your virtual environment
 ```
-python -m pip install -r requirements.txt
+git clone https://github.com/bozgen/wildfire-detection
+cd wildfire-detection
+py -m venv venv
+call venv/scripts/activate
+py -m pip install -r requirements.txt
 ```
 ---
 
