@@ -1,6 +1,7 @@
 import tensorflow as tf
 import cv2
 import os
+import numpy as np
 
 datadir = 'predata'
 
@@ -15,9 +16,8 @@ def resize_in_place():
 	file_count = 0
 	for idx, img in enumerate(os.listdir(datadir)):
 		image = cv2.imread(os.path.join(datadir, img))
-		image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		resized = tf.image.resize(image, (250,250)).numpy()
-		cv2.imwrite(os.path.join(datadir, f'{idx}.jpg'), resized)
+		cv2.imwrite(os.path.join(datadir, img), resized)
 		file_count += 1
 	print(f'{file_count} images have been resized.')
 
@@ -40,24 +40,52 @@ def mass_flip(axis):
 		file_count += 1
 	print(f'{file_count} images have been flipped.')
 
-def contrast():
+def increase_contrast(image_path):
+	img = cv2.imread(image_path)
+	lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+	l_channel, a, b = cv2.split(lab)
+
+	# Applying CLAHE to L-channel
+	clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+	cl = clahe.apply(l_channel)
+
+	# merge the CLAHE enhanced L-channel with the a and b channel
+	limg = cv2.merge((cl,a,b))
+
+	return cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+
+def mass_enhance_contrast():
 	prepare_images()
 	file_count = 0
 	for idx, image in enumerate(os.listdir(datadir)):
-		img = cv2.imread(os.path.join(datadir, image), 1)
-		lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
-		l_channel, a, b = cv2.split(lab)
-
-		# Applying CLAHE to L-channel
-		clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-		cl = clahe.apply(l_channel)
-
-		# merge the CLAHE enhanced L-channel with the a and b channel
-		limg = cv2.merge((cl,a,b))
-
-		enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
-
-		# Stacking the original image with the enhanced image
-		cv2.imwrite(os.path.join(datadir, f'enhanced_{image}'), enhanced_img)
+		enhanced_image = increase_contrast(os.path.join(datadir,image))
+		cv2.imwrite(os.path.join(datadir, f'enhanced_{image}'), enhanced_image)
 		file_count += 1
 	print(f'{file_count} images have been enhanced in contrast.')
+
+
+def mass_increase_brightness(value=30):
+	prepare_images()
+	file_count = 0
+	for idx, img in enumerate(os.listdir(datadir)):
+		bright_image = increase_brightness(os.path.join(datadir, img), value)
+		cv2.imwrite(os.path.join(datadir, f'bright_{img}'), bright_image)
+		file_count += 1
+	print(f'{file_count} images have been enhanced in brightness.')
+		
+
+def increase_brightness(image_path, value=30):
+    image = cv2.imread(image_path)
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
+
+    lim = 255 - value
+    v[v > lim] = 255
+    v[v <= lim] += value
+
+    final_hsv = cv2.merge((h, s, v))
+    final_image = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    return final_image
+
+# mass_increase_brightness(value=40)
+mass_enhance_contrast()

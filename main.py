@@ -1,5 +1,5 @@
 from wildfire.wildfire import Model
-from wildfire.preprocessing import contrast, mass_flip
+from wildfire.preprocessing import mass_enhance_contrast, mass_flip
 import os
 
 # PREPROCESSING  ( read README.md to learn how it works.)
