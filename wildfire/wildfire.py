@@ -89,7 +89,7 @@ class Model:
 
 		# test
 		for idx, test_image in enumerate(os.listdir(test_dir)):
-			is_fire, img = self.predict_single(os.path.join(test_dir, f'fire_test_{idx+1}.jpg'))
+			is_fire, img = self.predict_single(os.path.join(test_dir, test_image))
 			images.append(img)
 			if is_fire:
 				labels.append(0)
