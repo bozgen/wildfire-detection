@@ -39,7 +39,7 @@ def mass_flip(axis):
 		file_count += 1
 	print(f'{file_count} images have been flipped.')
 
-def increase_contrast(image_path):
+def enhance_contrast(image_path):
 	img = cv2.imread(image_path)
 	lab = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
 	l_channel, a, b = cv2.split(lab)
@@ -57,22 +57,11 @@ def mass_enhance_contrast():
 	prepare_images()
 	file_count = 0
 	for idx, image in enumerate(os.listdir(datadir)):
-		enhanced_image = increase_contrast(os.path.join(datadir,image))
+		enhanced_image = enhance_contrast(os.path.join(datadir,image))
 		cv2.imwrite(os.path.join(datadir, f'enhanced_{image}'), enhanced_image)
 		file_count += 1
 	print(f'{file_count} images have been enhanced in contrast.')
-
-
-def mass_increase_brightness(value=30):
-	prepare_images()
-	file_count = 0
-	for idx, img in enumerate(os.listdir(datadir)):
-		bright_image = increase_brightness(os.path.join(datadir, img), value)
-		cv2.imwrite(os.path.join(datadir, f'bright_{img}'), bright_image)
-		file_count += 1
-	print(f'{file_count} images have been enhanced in brightness.')
-		
-
+	
 def increase_brightness(image_path, value=30):
     image = cv2.imread(image_path)
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -86,5 +75,11 @@ def increase_brightness(image_path, value=30):
     final_image = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
     return final_image
 
-# mass_increase_brightness(value=40)
-mass_enhance_contrast()
+def mass_increase_brightness(value=30):
+	prepare_images()
+	file_count = 0
+	for idx, img in enumerate(os.listdir(datadir)):
+		bright_image = increase_brightness(os.path.join(datadir, img), value)
+		cv2.imwrite(os.path.join(datadir, f'bright_{img}'), bright_image)
+		file_count += 1
+	print(f'{file_count} images have been enhanced in brightness.')
