@@ -36,5 +36,5 @@ Then you can move the images you want to the data folder manually to include the
 You can also import functions from preprocessing module like below and use them wherever you want
 
 ```
-from wildfire.preprocessing import contrast, mass_flip, resize_in_place
+from wildfire.preprocessing import mass_enhance_contrast, increase_brightness,  mass_flip, resize_in_place
 ```
